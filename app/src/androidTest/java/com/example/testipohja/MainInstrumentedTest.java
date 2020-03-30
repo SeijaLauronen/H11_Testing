@@ -35,6 +35,15 @@ public class MainInstrumentedTest {
         // Context of the app under test.
         assertEquals("com.example.testipohja", appContext.getPackageName());
     }
+/*
+Class KissaRepository
+
+HaeParametreilla() should fail the test if nimi is null, empty or way too long.
+HaeParametreilla() should fail the test if lkm is less can 1.
+InsertKissa() should fail the test if entity does not have all attributes provided.
+InsertKissa() should fail the test if entity has nulls or nonsensical values.
+ */
+
 
     @Test
     public void kissaRepoInsertNull(){
@@ -86,6 +95,57 @@ public class MainInstrumentedTest {
 
     }
 
+
+    @Test
+    public void haeKissaParmasNotOK(){
+        KissaRepository kissaRepository = new KissaRepository(appContext);
+
+        assertFalse(kissaRepository.HaeParametreilla(null,1));
+        assertFalse(kissaRepository.HaeParametreilla("",1));
+        assertFalse(kissaRepository.HaeParametreilla("   ",1));
+        String nimi = " Kalle Kalle Kalle Kalle Kalle Kalle Kalle Kalle Kalle Kalle Kalle Kalle Kalle Kalle Kalle Kalle";
+        assertFalse(kissaRepository.HaeParametreilla(nimi,1));
+        assertFalse(kissaRepository.HaeParametreilla("Kalle",0));
+        assertFalse(kissaRepository.HaeParametreilla("Kalle",-1));
+
+    }
+    @Test
+    public void haeKissaParmasOK(){
+        KissaRepository kissaRepository = new KissaRepository(appContext);
+        assertTrue(kissaRepository.HaeParametreilla("Ville",5));
+    }
+
+    /*
+    Class Tietokanta
+    getInstance() should return the same instance.
+    getInstance() should not return null.
+     */
+    @Test
+    public void instanssiDB(){
+        Tietokanta db = Tietokanta.getDatabase(appContext);
+        assertNotNull(db);
+
+        Tietokanta db2 = Tietokanta.getDatabase(appContext);
+        assertSame(db,db2);
+
+        Tietokanta db3 =Tietokanta.getDatabaseDiffInstance(appContext);
+        assertNotSame(db,db3);
+
+    }
+/*
+Class PohjaFragment
+newInstance() should fail if defaultTxt-parameter is null.
+The method executed by pressing the button should produce fail if the text in EditText is empty or longer than 20.
+*/
+
+
+
+/*
+Class MainActivity
+setFragment() should fail if there is already a fragment in the FrameLayout and replace is false.
+setFragment() should fail if there if fragment-parameter is null.
+setFragment() should fail if fragment being placed is the same fragment.
+ */
 
 
 

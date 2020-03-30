@@ -31,4 +31,21 @@ public abstract class Tietokanta extends RoomDatabase {
         }
         return INSTANCE;
     }
+
+    static Tietokanta getDatabaseDiffInstance(final Context context) {
+
+            synchronized (Tietokanta.class) {
+
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+                            Tietokanta.class, "tietokanta")
+                            .build();
+
+            }
+
+        return INSTANCE;
+    }
+
+
+
+
 }

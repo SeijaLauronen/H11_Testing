@@ -41,7 +41,12 @@ public class KissaRepository {
 
     }
 
-    public void HaeParametreilla(String nimi, int lkm) {
-         kissaDao.haeNimella(nimi, lkm);
+    public boolean HaeParametreilla(String nimi, int lkm) {
+        if (nimi == null || nimi.trim().equals("") || nimi.length()>60 || lkm <1 ){
+            return false;
+        } else {
+            kissaDao.haeNimella(nimi, lkm);
+            return true;
+        }
     }
 }
