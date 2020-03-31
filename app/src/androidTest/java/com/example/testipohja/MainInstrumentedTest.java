@@ -58,7 +58,7 @@ public class MainInstrumentedTest<ActivityTestRule> {
         public ActivityTestRule<MainActivity> mActivityRule =
             new ActivityTestRule(MainActivity.class);  */
 
-//TODO Tämä "new MainActivity()" ei meinannut läpi. Nyt sain menemään läpi, vielä on ne testikeissit kesken
+//TODO Tämä "new MainActivity()" ei meinannut mennä läpi. Nyt sain menemään läpi
     //Tämä virhe tuli ihan ekana, kun käsitteli "vain luokkana" ja yritti luoda uuden instanssin new:lla
     //  "Can't create handler inside thread Thread[Instr: androidx.test.runner.AndroidJUnitRunner,5,main]
     //  that has not called Looper.prepare()"
@@ -79,31 +79,34 @@ public class MainInstrumentedTest<ActivityTestRule> {
             Looper.prepare(); //ei saa olla toista
         }
         catch (Exception e){
-
+            //Tähän tulee, kun Loop on jo prepred, jatketaan
         } ;
         MainActivity mainActivity = new MainActivity();
+        //mainActivity.onCreate(null);
+        //fragmentManager = getSupportFragmentManager();
+        //mainActivity.fragmentManager = getSupportFragmentManager();
         //TODO: oikeasti tämä tähtikommenttien väli, mutta pitää saada fragmentin lisäys toimimaan
-        /*
+
         PohjaFragment pohjaFragment = PohjaFragment.newInstance("UUSI");
-        mainActivity.setFragment(pohjaFragment, false);
+        mainActivity.setFragment(pohjaFragment, false); //tähän kaatuu fragmentin lisäys
         //Lisätään sama uudestaan, ei saa mennä läpi:
         assertFalse(mainActivity.setFragment(pohjaFragment,false));
-        */
-        assertFalse(mainActivity.setFragment(null, false)); //TODO tätä ei enää tässä, kun tuo frag lisäys toimisi
+
+        //assertFalse(mainActivity.setFragment(null, false)); //TODO tätä ei enää tässä, kun tuo frag lisäys toimisi
     }
 
     @Test
     public void mainActivitySetFragAllreadyFragInserted(){
         //1) setFragment() should fail if there is already a fragment in the FrameLayout and replace is false.
         try {
-            Looper.prepare(); //ei saa olla toista
+            Looper.prepare(); //ei saa olla toista kertaa
         }
         catch (Exception e){
-
+            //Tähän tulee, kun Loop on jo prepred, jatketaan
         } ;
 
         MainActivity mainActivity = new MainActivity(); //Tämä se ei meinannut mennä millään läpi, ennekuin tuo ylempi lause löytyi
-//TODO: oikeasti tämä tähtikommenttien väli, mutta pitää saada fragmentin lisäys toimimaan
+//TODO: oikeasti tämä tähtikommenttien väli, mutta pitäis saada fragmentin lisäys toimimaan
 /*
         //laitetaan ensin yksi fragmentti:
         mainActivity.setFragment(PohjaFragment.newInstance("EKA Fragmentti"), false);

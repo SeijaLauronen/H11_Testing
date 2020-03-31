@@ -30,7 +30,11 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
 
-        List<Fragment> fragList =   fragmentManager.getFragments(); //TODO tähän kaatuu
+        if (fragmentManager ==null) { //SSL, nullpointteri korjaantui tällä
+            fragmentManager = getSupportFragmentManager();
+        }
+
+        List<Fragment> fragList =   fragmentManager.getFragments(); //TODO tähän kaatui testikeissistä kutsuttaessa, yllä olevalla korjattu
         //On jo fragmentti, mutta sitä ei aiota korvata
         if (fragList.size()>0 && replace == false) {
             return false;
@@ -41,10 +45,12 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
 
-        //FragmentTransaction transaction = fragmentManager.beginTransaction();//Tästä tuli nullpointteri
+        //FragmentTransaction transaction = fragmentManager.beginTransaction();//Tästä tuli nullpointteri testistiä käsin ajettuna
+        //TODO: testisät ajettuna commit kaatuu, siinä tulee "FragmentManager has not been attached to a host."
+        //Yritin googlettaa, mutta en saanut ratkaistua
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(R.id.pohjaFrame, fragment);
-        transaction.commit();
+        transaction.commit();//TODO tähän kaatuu
         return true;
 
 
