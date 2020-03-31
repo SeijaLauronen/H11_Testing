@@ -2,6 +2,7 @@ package com.example.testipohja;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Looper;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.test.core.app.ApplicationProvider;
@@ -25,10 +26,9 @@ public class MainInstrumentedTest<ActivityTestRule> {
 
     public final Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-    //Zoom videolla n. kohdassa 25 min:
+    //Zoom videolla n. kohdassa 25 min: (yritin, auttaisko tänne siirtäminen, ai auttanut)
     //MainActivity mainActivity = new MainActivity(); //SSL 31.3.2020 no ottaako se tämän vaan tänne??
     //NO KUN EI
-
 
     @Test
     public void useAppContext() {
@@ -41,55 +41,45 @@ public class MainInstrumentedTest<ActivityTestRule> {
         assertEquals("com.example.testipohja", appContext.getPackageName());
     }
 
+//****************************Class MainActivity*********************************************
+/*
+setFragment() should fail if there is already a fragment in the FrameLayout and replace is false.
+setFragment() should fail if there if fragment-parameter is null.
+setFragment() should fail if fragment being placed is the same fragment.
+*/
+
     //No en saanu apua tästäkään, ei mene tuo rule.juttukaan läpi ainakaan tässä
     //https://stackoverflow.com/questions/46458735/instrumented-unit-class-test-cant-create-handler-inside-thread-that-has-not-c
     /*
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule =
             new ActivityTestRule(MainActivity.class);
-*/
-    /*
-Class MainActivity
-setFragment() should fail if there is already a fragment in the FrameLayout and replace is false.
-setFragment() should fail if there if fragment-parameter is null.
-setFragment() should fail if fragment being placed is the same fragment.
- */
-//TODO Tämä ei nyt mene läpi
-    //Can't create handler inside thread
-    // Thread[Instr: androidx.test.runner.AndroidJUnitRunner,5,main]
+    */
+
+//TODO Tämä ei nyt mene läpi. Nyt sain menemään läpi, vielä on ne testikeissit kesken
+    //Tämä virhe tuli ihan ekana, kun käsitteli "vain luokkana" ja yritti luoda uuden instanssin new:lla
+    //Can't create handler inside thread Thread[Instr: androidx.test.runner.AndroidJUnitRunner,5,main]
     // that has not called Looper.prepare()
     @Test
     public void mainActivitySetFrag(){
+        //31.3.2020 no olisko tästä apua: NO OLI, vihdoinkin!
+        //https://fincoapps.com/java-lang-runtimeexception-cant-create-handler-inside-thread-that-has-not-called-looper-prepare/
+        Looper.prepare();
+        //Tämänkin piti olla vain luokka, eipä ollut
+        MainActivity mainActivity = new MainActivity();
 
-        //Tämänkin piti olla vain luokka...joooooooooooooo
-        //MainActivity mainActivity = new MainActivity();
-        //MainActivity mainActivity ;
-
-        //onCreate(Bundle savedInstanceState)
-        //NO MITEN TÄÄ PITÄÄ INITIALISOIDA???!!!!!!!!!
-        //mainActivity.onCreate(null);
-        //Äh, sille pitää syöttää
-
-
-        //mainActivity=null;
         //assertFalse(mainActivity.setFragment(PohjaFragment.newInstance(""),false));
         //mainActivity.setFragment(PohjaFragment.newInstance(""), false);
-//        assertFalse(mainActivity.setFragment(null, false));
+        assertFalse(mainActivity.setFragment(null, false));
     }
-
-
-
-
-
+    //****************************KissaRepository*********************************************
     /*
-Class KissaRepository
-
-HaeParametreilla() should fail the test if nimi is null, empty or way too long.
-HaeParametreilla() should fail the test if lkm is less can 1.
-InsertKissa() should fail the test if entity does not have all attributes provided.
-InsertKissa() should fail the test if entity has nulls or nonsensical values.
- */
-
+    Class KissaRepository
+    HaeParametreilla() should fail the test if nimi is null, empty or way too long.
+    HaeParametreilla() should fail the test if lkm is less can 1.
+    InsertKissa() should fail the test if entity does not have all attributes provided.
+    InsertKissa() should fail the test if entity has nulls or nonsensical values.
+    */
 
     @Test
     public void kissaRepoInsertNull(){
@@ -138,9 +128,7 @@ InsertKissa() should fail the test if entity has nulls or nonsensical values.
         k.nimi ="Misse";
         k.omistaja="Testaaja Testinen";
         assertTrue(kissaRepository.InsertKissa(k));
-
     }
-
 
     @Test
     public void haeKissaParmasNotOK(){
@@ -161,8 +149,8 @@ InsertKissa() should fail the test if entity has nulls or nonsensical values.
         assertTrue(kissaRepository.HaeParametreilla("Ville",5));
     }
 
+    //****************************Class Tietokanta*********************************************
     /*
-    Class Tietokanta
     getInstance() should return the same instance.
     getInstance() should not return null.
      */
@@ -178,11 +166,11 @@ InsertKissa() should fail the test if entity has nulls or nonsensical values.
         assertNotSame(db,db3);
 
     }
-/*
-Class PohjaFragment
-newInstance() should fail if defaultTxt-parameter is null.
-The method executed by pressing the button should produce fail if the text in EditText is empty or longer than 20.
-*/
+//************************* Class PohjaFragment************************************************
+    /*
+    newInstance() should fail if defaultTxt-parameter is null.
+    The method executed by pressing the button should produce fail if the text in EditText is empty or longer than 20.
+    */
 
     @Test
     public void instanssiFrag(){
