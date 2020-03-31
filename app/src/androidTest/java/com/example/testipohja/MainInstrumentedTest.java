@@ -82,13 +82,14 @@ public class MainInstrumentedTest<ActivityTestRule> {
 
         } ;
         MainActivity mainActivity = new MainActivity();
+        //TODO: oikeasti tämä tähtikommenttien väli, mutta pitää saada fragmentin lisäys toimimaan
         /*
         PohjaFragment pohjaFragment = PohjaFragment.newInstance("UUSI");
         mainActivity.setFragment(pohjaFragment, false);
         //Lisätään sama uudestaan, ei saa mennä läpi:
         assertFalse(mainActivity.setFragment(pohjaFragment,false));
         */
-        assertFalse(mainActivity.setFragment(null, false));
+        assertFalse(mainActivity.setFragment(null, false)); //TODO tätä ei enää tässä, kun tuo frag lisäys toimisi
     }
 
     @Test
@@ -102,6 +103,7 @@ public class MainInstrumentedTest<ActivityTestRule> {
         } ;
 
         MainActivity mainActivity = new MainActivity(); //Tämä se ei meinannut mennä millään läpi, ennekuin tuo ylempi lause löytyi
+//TODO: oikeasti tämä tähtikommenttien väli, mutta pitää saada fragmentin lisäys toimimaan
 /*
         //laitetaan ensin yksi fragmentti:
         mainActivity.setFragment(PohjaFragment.newInstance("EKA Fragmentti"), false);
@@ -114,7 +116,7 @@ public class MainInstrumentedTest<ActivityTestRule> {
         assertTrue(mainActivity.setFragment(PohjaFragment.newInstance("KOLMAS"), true));
         //}
    */
-        assertFalse(mainActivity.setFragment(null, false));
+        assertFalse(mainActivity.setFragment(null, false));//TODO tätä ei enää tässä
     }
 
 
