@@ -1,7 +1,9 @@
 package com.example.testipohja;
 
 import android.content.Context;
+import android.os.Bundle;
 
+import androidx.fragment.app.FragmentManager;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -19,10 +21,13 @@ import static org.junit.Assert.*;
  */
 
 //@RunWith(AndroidJUnit4.class)
-public class MainInstrumentedTest {
+public class MainInstrumentedTest<ActivityTestRule> {
 
     public final Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
+    //Zoom videolla n. kohdassa 25 min:
+    //MainActivity mainActivity = new MainActivity(); //SSL 31.3.2020 no ottaako se tämän vaan tänne??
+    //NO KUN EI
 
 
     @Test
@@ -35,7 +40,48 @@ public class MainInstrumentedTest {
         // Context of the app under test.
         assertEquals("com.example.testipohja", appContext.getPackageName());
     }
-/*
+
+    //No en saanu apua tästäkään, ei mene tuo rule.juttukaan läpi ainakaan tässä
+    //https://stackoverflow.com/questions/46458735/instrumented-unit-class-test-cant-create-handler-inside-thread-that-has-not-c
+    /*
+    @Rule
+    public ActivityTestRule<MainActivity> mActivityRule =
+            new ActivityTestRule(MainActivity.class);
+*/
+    /*
+Class MainActivity
+setFragment() should fail if there is already a fragment in the FrameLayout and replace is false.
+setFragment() should fail if there if fragment-parameter is null.
+setFragment() should fail if fragment being placed is the same fragment.
+ */
+//TODO Tämä ei nyt mene läpi
+    //Can't create handler inside thread
+    // Thread[Instr: androidx.test.runner.AndroidJUnitRunner,5,main]
+    // that has not called Looper.prepare()
+    @Test
+    public void mainActivitySetFrag(){
+
+        //Tämänkin piti olla vain luokka...joooooooooooooo
+        //MainActivity mainActivity = new MainActivity();
+        //MainActivity mainActivity ;
+
+        //onCreate(Bundle savedInstanceState)
+        //NO MITEN TÄÄ PITÄÄ INITIALISOIDA???!!!!!!!!!
+        //mainActivity.onCreate(null);
+        //Äh, sille pitää syöttää
+
+
+        //mainActivity=null;
+        //assertFalse(mainActivity.setFragment(PohjaFragment.newInstance(""),false));
+        //mainActivity.setFragment(PohjaFragment.newInstance(""), false);
+//        assertFalse(mainActivity.setFragment(null, false));
+    }
+
+
+
+
+
+    /*
 Class KissaRepository
 
 HaeParametreilla() should fail the test if nimi is null, empty or way too long.
@@ -138,16 +184,23 @@ newInstance() should fail if defaultTxt-parameter is null.
 The method executed by pressing the button should produce fail if the text in EditText is empty or longer than 20.
 */
 
+    @Test
+    public void instanssiFrag(){
 
+        PohjaFragment pohjaFragment;
+        assertNotNull(pohjaFragment = PohjaFragment.newInstance("text"));
+        assertNull(pohjaFragment = PohjaFragment.newInstance(null));
+    }
 
-/*
-Class MainActivity
-setFragment() should fail if there is already a fragment in the FrameLayout and replace is false.
-setFragment() should fail if there if fragment-parameter is null.
-setFragment() should fail if fragment being placed is the same fragment.
- */
-
-
+    @Test
+    public void txtInFrag(){
+        //Olisko tähän pitänyt laittaa jotenkin se, että kun nappia painetaan...?
+        PohjaFragment pohjaFragment;
+        pohjaFragment = PohjaFragment.newInstance("");
+        assertFalse(pohjaFragment.checkTxt("1234567890123456789012345"));
+        assertFalse(pohjaFragment.checkTxt("  "));
+        assertTrue(pohjaFragment.checkTxt(" 34"));
+    }
 
 
 }

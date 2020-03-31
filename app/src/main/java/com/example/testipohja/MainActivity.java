@@ -22,9 +22,14 @@ public class MainActivity extends AppCompatActivity {
         setFragment(PohjaFragment.newInstance(""), false);
     }
 
-    public void setFragment(Fragment fragment, boolean replace) {
+    //public void setFragment(Fragment fragment, boolean replace) {
+    public boolean setFragment(Fragment fragment, boolean replace) {
+        if (fragment ==null){
+            return false;
+        }
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(R.id.pohjaFrame, fragment);
         transaction.commit();
+        return true;
     }
 }
