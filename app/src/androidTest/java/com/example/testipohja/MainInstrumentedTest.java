@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Looper;
 
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -12,6 +13,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -30,6 +33,7 @@ public class MainInstrumentedTest<ActivityTestRule> {
     //MainActivity mainActivity = new MainActivity(); //SSL 31.3.2020 no ottaako se tämän vaan tänne??
     //NO KUN EI
 
+
     @Test
     public void useAppContext() {
 
@@ -43,35 +47,77 @@ public class MainInstrumentedTest<ActivityTestRule> {
 
 //****************************Class MainActivity*********************************************
 /*
-setFragment() should fail if there is already a fragment in the FrameLayout and replace is false.
-setFragment() should fail if there if fragment-parameter is null.
-setFragment() should fail if fragment being placed is the same fragment.
+1) setFragment() should fail if there is already a fragment in the FrameLayout and replace is false.
+2) setFragment() should fail if there if fragment-parameter is null.
+3) setFragment() should fail if fragment being placed is the same fragment.
 */
 
     //No en saanu apua tästäkään, ei mene tuo rule.juttukaan läpi ainakaan tässä
     //https://stackoverflow.com/questions/46458735/instrumented-unit-class-test-cant-create-handler-inside-thread-that-has-not-c
-    /*
-    @Rule
-    public ActivityTestRule<MainActivity> mActivityRule =
-            new ActivityTestRule(MainActivity.class);
-    */
+    /* @Rule
+        public ActivityTestRule<MainActivity> mActivityRule =
+            new ActivityTestRule(MainActivity.class);  */
 
-//TODO Tämä ei nyt mene läpi. Nyt sain menemään läpi, vielä on ne testikeissit kesken
+//TODO Tämä "new MainActivity()" ei meinannut läpi. Nyt sain menemään läpi, vielä on ne testikeissit kesken
     //Tämä virhe tuli ihan ekana, kun käsitteli "vain luokkana" ja yritti luoda uuden instanssin new:lla
-    //Can't create handler inside thread Thread[Instr: androidx.test.runner.AndroidJUnitRunner,5,main]
-    // that has not called Looper.prepare()
+    //  "Can't create handler inside thread Thread[Instr: androidx.test.runner.AndroidJUnitRunner,5,main]
+    //  that has not called Looper.prepare()"
     @Test
-    public void mainActivitySetFrag(){
+    public void mainActivitySetFragNull(){
+        //2)
         //31.3.2020 no olisko tästä apua: NO OLI, vihdoinkin!
         //https://fincoapps.com/java-lang-runtimeexception-cant-create-handler-inside-thread-that-has-not-called-looper-prepare/
-        Looper.prepare();
-        //Tämänkin piti olla vain luokka, eipä ollut
-        MainActivity mainActivity = new MainActivity();
-
-        //assertFalse(mainActivity.setFragment(PohjaFragment.newInstance(""),false));
-        //mainActivity.setFragment(PohjaFragment.newInstance(""), false);
+        Looper.prepare(); //TÄMÄ piti löytää laitettavaksi. Mutta laitetaan se tuonne ylös...eipä antanukaan laittaa sinne, voivoi
+        MainActivity mainActivity = new MainActivity(); //Tämä se ei meinannut mennä millään läpi, ennekuin tuo ylempi lause löytyi
         assertFalse(mainActivity.setFragment(null, false));
     }
+
+    @Test
+    public void mainActivitySetFragSameFrag(){
+        //3)
+        try {
+            Looper.prepare(); //ei saa olla toista
+        }
+        catch (Exception e){
+
+        } ;
+        MainActivity mainActivity = new MainActivity();
+        /*
+        PohjaFragment pohjaFragment = PohjaFragment.newInstance("UUSI");
+        mainActivity.setFragment(pohjaFragment, false);
+        //Lisätään sama uudestaan, ei saa mennä läpi:
+        assertFalse(mainActivity.setFragment(pohjaFragment,false));
+        */
+        assertFalse(mainActivity.setFragment(null, false));
+    }
+
+    @Test
+    public void mainActivitySetFragAllreadyFragInserted(){
+        //1) setFragment() should fail if there is already a fragment in the FrameLayout and replace is false.
+        try {
+            Looper.prepare(); //ei saa olla toista
+        }
+        catch (Exception e){
+
+        } ;
+
+        MainActivity mainActivity = new MainActivity(); //Tämä se ei meinannut mennä millään läpi, ennekuin tuo ylempi lause löytyi
+/*
+        //laitetaan ensin yksi fragmentti:
+        mainActivity.setFragment(PohjaFragment.newInstance("EKA Fragmentti"), false);
+
+        //List<Fragment> fragList =   mainActivity.fragmentManager.getFragments();
+        //if (fragList.size()>0) {
+        // ei saa lisätä toista fragmenttia, jos ei korvata
+        assertFalse(mainActivity.setFragment(PohjaFragment.newInstance("TOKA"), false));
+        // saa lisätä entisen tilalle uuden
+        assertTrue(mainActivity.setFragment(PohjaFragment.newInstance("KOLMAS"), true));
+        //}
+   */
+        assertFalse(mainActivity.setFragment(null, false));
+    }
+
+
     //****************************KissaRepository*********************************************
     /*
     Class KissaRepository
